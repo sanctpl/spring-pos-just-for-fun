@@ -8,10 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.springfrontend.model.CategoryEnum;
-import pl.sda.springfrontend.model.Comment;
-import pl.sda.springfrontend.model.Post;
-import pl.sda.springfrontend.model.User;
+import pl.sda.springfrontend.model.*;
 import pl.sda.springfrontend.service.CommentService;
 import pl.sda.springfrontend.service.PostService;
 
@@ -21,6 +18,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 
@@ -39,7 +37,10 @@ public class PostsController {
         List<Post> postList = postService.getPosts();
         System.out.println(postList);
         System.out.println(session.getId());
-    //    System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        User user = (User)session.getAttribute("user");
+        if(user!=null){
+            System.out.println(user.getId());
+        }
         model.addAttribute("postList",postList);
         return "posts";
     }

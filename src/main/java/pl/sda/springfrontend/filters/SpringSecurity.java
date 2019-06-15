@@ -3,6 +3,7 @@ package pl.sda.springfrontend.filters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -17,6 +18,8 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
     UserDetailsService userDetailsService;
+    @Autowired
+    private AuthSuccessHandler authSuccessHandler;
 
     @Autowired
     public SpringSecurity(UserDetailsService userDetailsService) {
@@ -26,7 +29,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-}
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -40,9 +43,10 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/addpost*").hasAnyAuthority("ADMIN","MOD")
                 .antMatchers("/**").permitAll()
-                .and().formLogin().loginPage("/login")
+                .and().formLogin().loginPage("/login").successHandler(authSuccessHandler)
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().csrf().disable();
+
     }
     @SuppressWarnings("deprecation")
     @Bean
