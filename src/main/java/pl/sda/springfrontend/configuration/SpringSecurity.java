@@ -10,7 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import pl.sda.springfrontend.handlers.AuthSuccessHandler;
+import pl.sda.springfrontend.handlers.CustomAuthSuccessHandler;
+import pl.sda.springfrontend.handlers.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -18,12 +19,16 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
     UserDetailsService userDetailsService;
-    @Autowired
-    private AuthSuccessHandler authSuccessHandler;
+
+    private final CustomAuthSuccessHandler customAuthSuccessHandler;
+
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Autowired
-    public SpringSecurity(UserDetailsService userDetailsService) {
+    public SpringSecurity(UserDetailsService userDetailsService, CustomAuthSuccessHandler customAuthSuccessHandler, CustomLogoutSuccessHandler customLogoutSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.customAuthSuccessHandler = customAuthSuccessHandler;
+        this.customLogoutSuccessHandler = customLogoutSuccessHandler;
     }
 
     @Autowired
@@ -43,8 +48,8 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/addpost*").hasAnyAuthority("ADMIN","MOD")
                 .antMatchers("/**").permitAll()
-                .and().formLogin().loginPage("/login").successHandler(authSuccessHandler)
-                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and().formLogin().loginPage("/login").successHandler(customAuthSuccessHandler)
+                .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).logoutSuccessUrl("/").permitAll()
                 .and().csrf().disable();
 
     }

@@ -15,12 +15,12 @@ import java.io.IOException;
 
 
 @Component
-public class AuthSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
     private final
     UserRepository repository;
 
     @Autowired
-    public AuthSuccessHandler(UserRepository repository) {
+    public CustomAuthSuccessHandler(UserRepository repository) {
         this.repository = repository;
     }
 
