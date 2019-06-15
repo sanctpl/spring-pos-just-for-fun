@@ -1,20 +1,17 @@
 package pl.sda.springfrontend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.springfrontend.model.*;
+import pl.sda.springfrontend.model.CategoryEnum;
+import pl.sda.springfrontend.model.Comment;
+import pl.sda.springfrontend.model.Post;
+import pl.sda.springfrontend.model.User;
 import pl.sda.springfrontend.service.CommentService;
 import pl.sda.springfrontend.service.PostService;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,26 +29,25 @@ public class PostsController {
     }
 
     @GetMapping("/")
-    public String  home(Model model, HttpSession session){
+    public String home(Model model, HttpSession session) {
         List<Post> postList = postService.getPosts();
         System.out.println(postList);
         System.out.println(session.getId());
-        User user = (User)session.getAttribute("user");
-        if(user!=null){
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
             System.out.println(user.getId());
         }
-        model.addAttribute("postList",postList);
+        model.addAttribute("postList", postList);
         return "posts";
     }
 
 
-
     @GetMapping("/post/{id}")
-    public String showPost(Model model, @PathVariable Long id){
+    public String showPost(Model model, @PathVariable Long id) {
         Post currentPost = postService.getPost(id);
 
-        if (currentPost != null){
-            model.addAttribute("post",currentPost);
+        if (currentPost != null) {
+            model.addAttribute("post", currentPost);
             List<Comment> postComment = commentService.getPostComment(id);
             model.addAttribute("com", postComment);
             return "post";
@@ -60,21 +56,23 @@ public class PostsController {
 
         return "/posts";
     }
+
     @GetMapping("/addComment/{post_id}")
-    public String addComment(@PathVariable Long post_id, Model model){
-        model.addAttribute("post",postService.getPost(post_id));
+    public String addComment(@PathVariable Long post_id, Model model) {
+        model.addAttribute("post", postService.getPost(post_id));
         model.addAttribute("comment", new Comment());
         return "addcomment";
     }
 
     @PostMapping(value = "/addComment/{post_id}/{user_id}")
-    public String addComment(@ModelAttribute Comment comment, @PathVariable Long post_id, @PathVariable Long user_id){
-        commentService.addComment(post_id,user_id,comment);
-        return "redirect:/post/"+post_id;
+    public String addComment(@ModelAttribute Comment comment, @PathVariable Long post_id, @PathVariable Long user_id) {
+        commentService.addComment(post_id, user_id, comment);
+        return "redirect:/post/" + post_id;
     }
+
     @GetMapping("/addpost")
-    public String addPost(Model model){
-        model.addAttribute("post",new Post());
+    public String addPost(Model model) {
+        model.addAttribute("post", new Post());
         List<CategoryEnum> categories =
                 new ArrayList<>(Arrays.asList(CategoryEnum.values()));
         System.out.println(categories);
@@ -84,17 +82,18 @@ public class PostsController {
     }
 
     @PostMapping("/addpost")
-    public String addPost(@ModelAttribute Post post){
+    public String addPost(@ModelAttribute Post post) {
         postService.addPost(post);
 
         return "redirect:/";
     }
 
     @DeleteMapping("/delete/{post_id}")
-    public String delete(@PathVariable Long post_id){
-        postService.removePost(5L,post_id);
+    public String delete(@PathVariable Long post_id) {
+        postService.removePost(5L, post_id);
         return "redirect:/";
     }
+
     @GetMapping("/update/{post_id}")
     public String editPost(@PathVariable Long post_id, Model model) {
         model.addAttribute(postService.getPost(post_id));
@@ -102,9 +101,9 @@ public class PostsController {
     }
 
     @PutMapping("/update/{post_id}")
-    public String editPost(@ModelAttribute Post post, @PathVariable Long post_id){
+    public String editPost(@ModelAttribute Post post, @PathVariable Long post_id) {
         postService.updatePost(post_id, post);
-        return "redirect:/post/"+post_id;
+        return "redirect:/post/" + post_id;
     }
 
 }

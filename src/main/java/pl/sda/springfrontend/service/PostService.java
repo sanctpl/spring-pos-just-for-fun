@@ -1,13 +1,9 @@
 package pl.sda.springfrontend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import pl.sda.springfrontend.model.CategoryEnum;
-import pl.sda.springfrontend.model.Comment;
 import pl.sda.springfrontend.model.Post;
 import pl.sda.springfrontend.model.User;
-import pl.sda.springfrontend.repository.CommentRepository;
 import pl.sda.springfrontend.repository.PostRepository;
 import pl.sda.springfrontend.repository.RoleRepository;
 import pl.sda.springfrontend.repository.UserRepository;

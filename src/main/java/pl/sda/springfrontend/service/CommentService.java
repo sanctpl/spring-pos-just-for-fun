@@ -26,10 +26,7 @@ public class CommentService {
 
 
     public List<Comment> getPostComment(Long post_id) {
-        List<Comment> allByPostId = commentRepository.findAllByPostId(post_id);
-        // if(allByPostId!=null) return allByPostId;
-        // return new ArrayList<Comment>();
-        return allByPostId;
+        return commentRepository.findAllByPostId(post_id);
     }
 
     public String addComment(Long post_id, Long user_id, Comment comment) {

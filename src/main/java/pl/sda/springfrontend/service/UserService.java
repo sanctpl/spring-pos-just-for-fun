@@ -1,13 +1,6 @@
 package pl.sda.springfrontend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.sda.springfrontend.model.Role;
-import pl.sda.springfrontend.model.User;
-import pl.sda.springfrontend.repository.RoleRepository;
-import pl.sda.springfrontend.repository.UserRepository;
-
-import java.util.List;
 
 @Service
 public class UserService {
