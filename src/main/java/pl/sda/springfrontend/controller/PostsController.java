@@ -14,17 +14,16 @@ import pl.sda.springfrontend.service.PostService;
 
 import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
-
 public class PostsController {
-    PostService postService;
-    CommentService commentService;
+    private PostService postService;
+    private CommentService commentService;
 
     @Autowired
     public PostsController(PostService postService, CommentService commentService) {
