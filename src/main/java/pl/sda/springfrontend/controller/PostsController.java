@@ -3,16 +3,21 @@ package pl.sda.springfrontend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.springfrontend.model.CategoryEnum;
 import pl.sda.springfrontend.model.Comment;
 import pl.sda.springfrontend.model.Post;
+import pl.sda.springfrontend.model.User;
 import pl.sda.springfrontend.service.CommentService;
 import pl.sda.springfrontend.service.PostService;
 
 import javax.jws.WebParam;
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +35,11 @@ public class PostsController {
     }
 
     @GetMapping("/")
-    public String  home(Model model){
+    public String  home(Model model, HttpSession session){
         List<Post> postList = postService.getPosts();
         System.out.println(postList);
+        System.out.println(session.getId());
+    //    System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         model.addAttribute("postList",postList);
         return "posts";
     }

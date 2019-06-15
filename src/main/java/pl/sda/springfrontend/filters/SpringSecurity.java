@@ -11,13 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
-
 @Configuration
 @EnableWebSecurity
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
     UserDetailsService userDetailsService;
+
     @Autowired
     public SpringSecurity(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -26,10 +26,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    //    auth.inMemoryAuthentication().withUser("user").password("1").roles("USER").and()
-    //    .withUser("admin").password("1").roles("ADMIN").and()
-   //     .withUser("dba").password("123456").roles("DBA");
-    }
+}
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -41,7 +38,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/addpost*").hasAnyAuthority("ADMIN")
+                .antMatchers("/addpost*").hasAnyAuthority("ADMIN","MOD")
                 .antMatchers("/**").permitAll()
                 .and().formLogin().loginPage("/login")
                 .and().logout().logoutSuccessUrl("/").permitAll()
@@ -51,10 +48,6 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    }
+}
 
-  //  @Bean
- //   public PasswordEncoder passwordEncoder() {
-  //      return new BCryptPasswordEncoder();
-  //  }
 }

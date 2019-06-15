@@ -1,6 +1,7 @@
 package pl.sda.springfrontend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.sda.springfrontend.model.CategoryEnum;
 import pl.sda.springfrontend.model.Comment;
@@ -19,6 +20,8 @@ public class PostService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     PostRepository postRepository;
+
+
     /*CommentRepository commentRepository;*/
 
   /*  public String addComment(Long post_id, Long user_id, String message) {

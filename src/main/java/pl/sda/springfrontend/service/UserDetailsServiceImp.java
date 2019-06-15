@@ -1,5 +1,6 @@
 package pl.sda.springfrontend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
     private final
     UserRepository userRepository;
 
+    @Autowired
     public UserDetailsServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -23,7 +25,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(s);
-        System.out.println(user);
+        //System.out.println(user);
         UserBuilder builder = null;
         if (user != null) {
 
@@ -36,6 +38,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
+
         return builder.build();
     }
 }
