@@ -6,4 +6,5 @@ import pl.sda.springfrontend.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+    Role findFirstByRole(String role_name);
 }

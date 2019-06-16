@@ -9,7 +9,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.sda.springfrontend.handlers.CustomAuthSuccessHandler;
 import pl.sda.springfrontend.handlers.CustomLogoutSuccessHandler;
 
@@ -46,17 +47,22 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/addpost*").hasAnyAuthority("ADMIN","MOD")
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/addpost*").hasAnyRole("ADMIN", "MOD")
                 .antMatchers("/**").permitAll()
-                .and().formLogin().loginPage("/login").successHandler(customAuthSuccessHandler)
-                .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).logoutSuccessUrl("/").permitAll()
+                .and().formLogin().successHandler(customAuthSuccessHandler)
+                .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).permitAll()
                 .and().csrf().disable();
 
     }
-    @SuppressWarnings("deprecation")
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+   /* @SuppressWarnings("deprecation")
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();*/
 }
 
-}

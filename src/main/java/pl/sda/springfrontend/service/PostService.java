@@ -80,6 +80,10 @@ public class PostService {
         post.setCategoryEnum(updatedPost.getCategoryEnum());
         postRepository.save(post);
     }
+
+    public void removeAllPosts() {
+        postRepository.deleteAll();
+    }
     /*
     public String changeTitle(Long user_id, Long post_id, String newTitle){
         if (userRepository.findById(user_id).isPresent()){

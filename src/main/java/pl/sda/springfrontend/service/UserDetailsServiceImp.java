@@ -33,7 +33,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
             builder.disabled(false);
             builder.password(user.getPassword());
             String[] authorities = user.getRoles()
-                    .stream().map(Role::getRole_name).toArray(String[]::new);
+                    .stream().map(Role::getRole).toArray(String[]::new);
             builder.authorities(authorities);
         } else {
             throw new UsernameNotFoundException("User not found.");

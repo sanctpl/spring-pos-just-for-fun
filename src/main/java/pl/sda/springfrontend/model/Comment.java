@@ -18,7 +18,7 @@ public class Comment {
     @ManyToOne()
     @JoinColumn(name="user_id")
     private User user;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name="post_id")
     private Post post;
 
@@ -27,6 +27,4 @@ public class Comment {
         this.user = user;
         this.post = post;
     }
-    //    private User author;// author id;
- //  private Post post;//post id;
 }

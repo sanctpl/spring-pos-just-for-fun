@@ -25,7 +25,9 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
+                                        HttpServletResponse httpServletResponse,
+                                        Authentication authentication) throws IOException, ServletException {
         HttpSession session = httpServletRequest.getSession();
         User user = repository.findByEmail(authentication.getName());
         session.setAttribute("user", user);

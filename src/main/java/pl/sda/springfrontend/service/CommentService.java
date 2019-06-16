@@ -42,6 +42,10 @@ public class CommentService {
 
 
     }
+
+    public void removeAllComents() {
+        commentRepository.deleteAll();
+    }
     /*
     public void deleteComment(Long comment_id, Long user_id){
         if(userRepository.findById(user_id).isPresent() && commentRepository.findById(comment_id).isPresent()) {
