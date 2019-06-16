@@ -7,5 +7,6 @@ import pl.sda.springfrontend.model.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Post findFirstByTitle(String title);
+
+    Post findFirstById(Long id);
 }

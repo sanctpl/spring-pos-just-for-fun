@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import pl.sda.springfrontend.helpers.MailingService;
 
+import javax.mail.MessagingException;
+
 @Controller
 public class UserRegistrationController {
 
@@ -15,9 +17,13 @@ public class UserRegistrationController {
 
     @GetMapping("/registration")
     public String RegistrationForm() {
-        mailingService.sendSimpleMessage("tomasz.morawski1987@gmail.com", "Authentication", "Give me yours password!");
 
-        mailingService.sendSimpleMessage("damian.kolczynski@gmail.com", "Authentication", "Give me yours password!");
+
+        try {
+            mailingService.sendSimpleMessage("damian.kolczynski@gmail.com", "Authentication", "Give me yours password!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return "redirect:/";
     }
 }

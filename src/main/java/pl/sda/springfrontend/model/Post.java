@@ -1,5 +1,6 @@
 package pl.sda.springfrontend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,16 +24,20 @@ public class Post {
     @Type(type="text")
     private String content;
     @Enumerated
-    private CategoryEnum categoryEnum;
+    private CategoryEnum category;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
+    @JsonIgnore
+    @OneToMany(mappedBy = "post")
+    List<Comment> comments = new ArrayList<>();
 
 
-    public Post(String title, String content, User user, CategoryEnum categoryEnum) {
+    public Post(String title, String content, User user, CategoryEnum category) {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.categoryEnum = categoryEnum;
+        this.category = category;
     }
+
 }

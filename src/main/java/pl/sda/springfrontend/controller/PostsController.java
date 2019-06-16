@@ -1,5 +1,6 @@
 package pl.sda.springfrontend.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,104 +9,110 @@ import pl.sda.springfrontend.model.CategoryEnum;
 import pl.sda.springfrontend.model.Comment;
 import pl.sda.springfrontend.model.Post;
 import pl.sda.springfrontend.model.User;
-import pl.sda.springfrontend.service.CommentService;
 import pl.sda.springfrontend.service.PostService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 
 @Controller
 public class PostsController {
+
     private PostService postService;
-    private CommentService commentService;
 
     @Autowired
-    public PostsController(PostService postService, CommentService commentService) {
+    public PostsController(PostService postService) {
         this.postService = postService;
-        this.commentService = commentService;
     }
 
     @GetMapping("/")
-    public String home(Model model, HttpSession session) {
-        List<Post> postList = postService.getPosts();
-        System.out.println(postList);
-        System.out.println(session.getId());
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            System.out.println(user.getId());
-        }
-        model.addAttribute("postList", postList);
-        //  mailingService.sendSimpleMessage("damian.kolczynski@gmail.com","Authentication", "Give me yours password!");
-
+    public String home(Model model, HttpSession httpSession) {
+        List<Post> posts = postService.getAll();
+        User user = getUserFromSession(httpSession);
+        System.out.println(user);
+        System.out.println(posts);
+        model.addAttribute("user", user);
+        model.addAttribute("posts", posts);
         return "posts";
     }
 
 
-    @GetMapping("/post/{id}")
-    public String showPost(Model model, @PathVariable Long id) {
-        Post currentPost = postService.getPost(id);
-
-        if (currentPost != null) {
-            model.addAttribute("post", currentPost);
-            List<Comment> postComment = commentService.getPostComment(id);
-            model.addAttribute("com", postComment);
-            return "post";
-
-        }
-
-        return "/posts";
-    }
-
-    @GetMapping("/addComment/{post_id}")
-    public String addComment(@PathVariable Long post_id, Model model) {
-        model.addAttribute("post", postService.getPost(post_id));
-        model.addAttribute("comment", new Comment());
-        return "addcomment";
-    }
-
-    @PostMapping(value = "/addComment/{post_id}/{user_id}")
-    public String addComment(@ModelAttribute Comment comment, @PathVariable Long post_id, @PathVariable Long user_id) {
-        commentService.addComment(post_id, user_id, comment);
-        return "redirect:/post/" + post_id;
-    }
-
     @GetMapping("/addpost")
-    public String addPost(Model model) {
-        model.addAttribute("post", new Post());
-        List<CategoryEnum> categories =
-                new ArrayList<>(Arrays.asList(CategoryEnum.values()));
-        System.out.println(categories);
+    public String addPost(Model model, HttpSession session) {
+        model.addAttribute("user", getUserFromSession(session));
 
-        model.addAttribute("categories", categories);
+        List<CategoryEnum> categoryEnum = new ArrayList<>(Arrays.asList(CategoryEnum.values()));
+        model.addAttribute("categoryList", categoryEnum);
+        model.addAttribute("post", new Post());
         return "addpost";
     }
 
-    @PostMapping("/addpost")
-    public String addPost(@ModelAttribute Post post) {
-        postService.addPost(post);
-
-        return "redirect:/";
+    @PostMapping("/addPost/{user_id}")
+    public String addPost(Model model, @PathVariable Long user_id, Post post) {
+        Post tmp = postService.addPost(post, user_id);
+        return "redirect:/post/" + tmp.getId();
     }
 
-    @DeleteMapping("/delete/{post_id}")
-    public String delete(@PathVariable Long post_id) {
-        postService.removePost(5L, post_id);
-        return "redirect:/";
+
+    @GetMapping("/post/{id}")
+    public String singlePost(@PathVariable Long id, Model model, HttpSession session) {
+        model.addAttribute("user", getUserFromSession(session));
+
+        Post post = postService.getPost(id);
+        List<Comment> comments = postService.getAllComentsForPost(id);
+        model.addAttribute("post", post);
+        model.addAttribute("comment", new Comment());
+        return "post";
     }
 
-    @GetMapping("/update/{post_id}")
-    public String editPost(@PathVariable Long post_id, Model model) {
-        model.addAttribute(postService.getPost(post_id));
-        return "edit";
-    }
-
-    @PutMapping("/update/{post_id}")
-    public String editPost(@ModelAttribute Post post, @PathVariable Long post_id) {
-        postService.updatePost(post_id, post);
+    @PostMapping("/addComment/{post_id}/{user_id}")
+    public String addComment(@PathVariable Long post_id, @PathVariable Long user_id, Comment comment, Model model) {
+        postService.addComentToPost(post_id, user_id, comment);
         return "redirect:/post/" + post_id;
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+        Optional<User> user = Optional.of(getUserFromSession(session));
+        model.addAttribute("user", user.get());
+        if (user.get().getId() != null) {
+            postService.deleteById(id, user.get().getId());
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/edit/{post_id}")
+    public String editPost(@PathVariable Long post_id, Model model, HttpSession session) {
+        Optional<User> user = Optional.of(getUserFromSession(session));
+        model.addAttribute("user", getUserFromSession(session));
+        if (user.get().getId() != null) {
+            if (postService.isOwner(post_id, user.get().getId())) {
+                List<CategoryEnum> categoryEnum = new ArrayList<>(Arrays.asList(CategoryEnum.values()));
+                model.addAttribute("categoryList", categoryEnum);
+                Post post = postService.getPost(post_id);
+                model.addAttribute("post", post);
+                return "edit";
+            }
+
+        }
+        return "redirect:/";
+    }
+
+    @PutMapping("/edit/{post_id}")
+    public String editPost(@PathVariable Long post_id, Model model, @ModelAttribute Post new_post) {
+        postService.updatePost(post_id, new_post);
+        return "redirect:/";
+    }
+
+    private User getUserFromSession(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setId(-1L);
+            user.setEmail("Niezalogowany");
+        }
+        return user;
+    }
 }

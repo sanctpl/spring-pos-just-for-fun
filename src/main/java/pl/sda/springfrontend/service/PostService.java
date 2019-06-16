@@ -2,8 +2,10 @@ package pl.sda.springfrontend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.sda.springfrontend.model.Comment;
 import pl.sda.springfrontend.model.Post;
 import pl.sda.springfrontend.model.User;
+import pl.sda.springfrontend.repository.CommentRepository;
 import pl.sda.springfrontend.repository.PostRepository;
 import pl.sda.springfrontend.repository.RoleRepository;
 import pl.sda.springfrontend.repository.UserRepository;
@@ -13,12 +15,11 @@ import java.util.List;
 
 @Service
 public class PostService {
-    UserRepository userRepository;
-    RoleRepository roleRepository;
-    PostRepository postRepository;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private PostRepository postRepository;
 
-
-    /*CommentRepository commentRepository;*/
+    private final CommentRepository commentRepository;
 
   /*  public String addComment(Long post_id, Long user_id, String message) {
         if (postRepository.findById(post_id).isPresent() && userRepository.findById(user_id).isPresent()) {
@@ -40,62 +41,67 @@ public class PostService {
         }
     }*/
     @Autowired
-    public PostService(UserRepository userRepository, RoleRepository roleRepository, PostRepository postRepository) {
+    public PostService(UserRepository userRepository, RoleRepository roleRepository, PostRepository postRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
-    public List<Post> getPosts() {
+    public List<Post> getAll() {
         return postRepository.findAll();
-
     }
 
-    public Post getPost(Long post_id){
-        if(postRepository.findById(post_id).isPresent()){
-            return postRepository.getOne(post_id);
-        }
-        return null;
+    public Post getPost(Long id) {
+//        if (postRepository.findById(id).isPresent()){
+        return postRepository.getOne(id);
+//        }
+//        return new Post();
     }
 
-    public void addPost(Post post) {
-        post.setUser(userRepository.getOne(5L));
-        postRepository.save(post);
+    public List<Comment> getAllComentsForPost(Long id) {
+
+        return commentRepository.findAllByPostId(id);
     }
 
-    public void removePost(Long user_id, Long post_id) {
-        if(userRepository.findById(user_id).isPresent() && postRepository.findById(post_id).isPresent()) {
-            Post post = postRepository.getOne(post_id);
-            User user = userRepository.getOne(user_id);
-            if (user.getRoles().contains(roleRepository.getOne(2L)) || post.getUser().getId().equals(user.getId()))
-                    postRepository.delete(post);
-        }
-    }
 
-    public void updatePost(Long post_id, Post updatedPost){
+    public void addComentToPost(Long post_id, Long user_id, Comment comment) {
+        User user = userRepository.getOne(user_id);
+        comment.setUser(user);
         Post post = postRepository.getOne(post_id);
+        comment.setPost(post);
+        commentRepository.saveAndFlush(comment);
+    }
 
-        post.setTitle(updatedPost.getTitle());
-        post.setContent(updatedPost.getContent());
-        post.setCategoryEnum(updatedPost.getCategoryEnum());
-        postRepository.save(post);
+    public Post addPost(Post post, Long user_id) {
+        post.setUser(userRepository.getOne(user_id));
+        return postRepository.saveAndFlush(post);
+    }
+
+    public void deleteById(Long postId, Long userId) {
+
+        if (userRepository.existsById(userId)) {
+            User user = userRepository.findFirstById(userId);
+            if (user == postRepository.findFirstById(postId).getUser()
+                    || user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMIN"))) {
+                postRepository.deleteById(postId);
+            }
+        }
+    }
+
+    public void updatePost(Long post_id, Post new_post) {
+        Post post = postRepository.getOne(post_id);
+        post.setTitle(new_post.getTitle());
+        post.setContent(new_post.getContent());
+        post.setCategory(new_post.getCategory());
+        postRepository.saveAndFlush(post);
+    }
+
+    public boolean isOwner(Long post_id, Long userId) {
+        return postRepository.findFirstById(post_id).getUser().getId().equals(userId);
     }
 
     public void removeAllPosts() {
         postRepository.deleteAll();
     }
-    /*
-    public String changeTitle(Long user_id, Long post_id, String newTitle){
-        if (userRepository.findById(user_id).isPresent()){
-            if (userRepository.getOne(user_id).getRoles().contains(roleRepository.getOne(2L))){
-                Post post = postRepository.findFirstByTitle(postRepository.getOne(post_id).getTitle());
-                post.setTitle(newTitle);
-                postRepository.save(post);
-                return "zmodyfikowano tytuł posta";
-            }
-            return "brak uprawnień";
-        }
-    return "błędne dane";
-    }*/
-
 }

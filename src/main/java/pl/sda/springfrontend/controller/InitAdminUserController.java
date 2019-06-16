@@ -48,7 +48,7 @@ public class InitAdminUserController {
         roleService.addRole(roleMod);
         user.setActivity(true);
         user.addRole(roleService.getRoleByName("ROLE_ADMIN"));
-        userService.saveUser(user);
+        userService.addUser(user);
 
         return "redirect:/";
     }
