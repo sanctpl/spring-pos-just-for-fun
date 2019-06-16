@@ -38,6 +38,8 @@ public class PostsController {
             System.out.println(user.getId());
         }
         model.addAttribute("postList", postList);
+        //  mailingService.sendSimpleMessage("damian.kolczynski@gmail.com","Authentication", "Give me yours password!");
+
         return "posts";
     }
 
