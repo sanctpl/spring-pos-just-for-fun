@@ -16,6 +16,7 @@ import pl.sda.springfrontend.handlers.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
+//@EnableOAuth2Sso
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
@@ -46,7 +47,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/**", "/webjars/**", "/error**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/addpost*").hasAnyRole("ADMIN", "MOD")
                 .antMatchers("/**").permitAll()

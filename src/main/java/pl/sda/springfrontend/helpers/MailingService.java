@@ -18,11 +18,7 @@ class MailingService {
     }
 
     public void sendSimpleMessage(String to, String subject, String message) throws MessagingException {
-//       SimpleMailMessage emailMessage = new SimpleMailMessage();
-//        emailMessage.setFrom("authority@sanct.pl");
-//        emailMessage.setTo(to);
-//        emailMessage.setSubject(subject);
-        // emailMessage.setText(message);
+
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         mimeMessage.setFrom("authority@sanct.pl");
         mimeMessage.setRecipients(Message.RecipientType.TO, to);

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    ...
+</head>
+<body>
+<div class="container" th:fragment="header">
+    <a class="navbar-brand" th:href="@{/}" th:text="${user.email}"></a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/addpost}">Add Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/contact}">Contact</a>
+            </li>
+            <li class="nav-item" th:if="${user.id} == -1">
+                <a type="button" class="btn btn-outline-light" href="/adduser">Sing Up</a>
+            </li>
+            <li class="nav-item" th:if="${user.id} != -1">
+                <a type="button" class="btn btn-outline-light" href="/logout">Logout</a>
+            </li>
+            <li class="nav-item" th:if="${user.id} == -1">
+                <a type="button" class="btn btn-outline-light" href="/login">Login</a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+</body>
+</html>
