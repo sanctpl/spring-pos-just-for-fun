@@ -53,4 +53,9 @@ public class UsersController {
         }
         return user;
     }
+
+    @GetMapping("/log")
+    public String loginMapping() {
+        return "login";
+    }
 }
