@@ -38,4 +38,7 @@ public class User {
     public void addRole (Role role){
         this.roles.add(role);
     }
+
+    public void setUsername(String displayName) {
+    }
 }

@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.sda.springfrontend.handlers.CustomAuthSuccessHandler;
 import pl.sda.springfrontend.handlers.CustomLogoutSuccessHandler;
 
+
 @Configuration
 @EnableWebSecurity
-//@EnableOAuth2Sso
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
@@ -25,6 +25,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     private final CustomAuthSuccessHandler customAuthSuccessHandler;
 
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
 
     @Autowired
     public SpringSecurity(UserDetailsService userDetailsService, CustomAuthSuccessHandler customAuthSuccessHandler, CustomLogoutSuccessHandler customLogoutSuccessHandler) {
@@ -46,11 +47,11 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
-                .antMatchers("/**", "/webjars/**", "/error**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/addpost*").hasAnyRole("ADMIN", "MOD")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/addpost").hasAnyRole("ADMIN", "MOD")
+                .antMatchers("/**", "/webjars/**", "/error**").permitAll()
                 .and().formLogin().successHandler(customAuthSuccessHandler)
                 .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).permitAll()
                 .and().csrf().disable();
@@ -61,6 +62,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 }
 
