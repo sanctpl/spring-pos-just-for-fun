@@ -65,7 +65,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/addpost").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/**", "/webjars/**", "/error**").permitAll()
-                .and().formLogin().loginPage("/log").loginProcessingUrl("/log").successHandler(customAuthSuccessHandler)
+                .and().formLogin().loginPage("/log").loginProcessingUrl("/log").successHandler(customAuthSuccessHandler).passwordParameter("pass")
                 .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).permitAll()
                 .and().csrf().disable().addFilterAt(socialLoginFilter.authFilter(), BasicAuthenticationFilter.class);
 

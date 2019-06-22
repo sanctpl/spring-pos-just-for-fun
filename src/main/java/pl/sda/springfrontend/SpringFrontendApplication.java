@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringFrontendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringFrontendApplication.class, args);
+
+        SpringApplication springApplication = new SpringApplication(SpringFrontendApplication.class);
+        springApplication.setAdditionalProfiles("ssl");
+        springApplication.run(args);
     }
 
 }
