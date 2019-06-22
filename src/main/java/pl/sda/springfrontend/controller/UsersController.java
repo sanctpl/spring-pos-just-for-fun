@@ -5,10 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.sda.springfrontend.model.User;
 import pl.sda.springfrontend.service.UserService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -22,7 +24,7 @@ public class UsersController {
     }
 
     @GetMapping("/adduser")
-    public String adduser(Model model, HttpSession session) {
+    public String adduser(Model model, HttpSession session, HttpServletResponse sss) {
         User user = getUserFromSession(session);
         model.addAttribute("user", user);
         if (user.getId().equals(-1L)) {
@@ -33,16 +35,16 @@ public class UsersController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(@Valid User newUser, BindingResult result, Model model, HttpSession session) {
+    public String addUser(@ModelAttribute(name = "newuser") @Valid User newuser, BindingResult result, Model model, HttpSession session) {
+        System.out.println(result.hasErrors());
         if (result.hasErrors()) {
             return "singup";
         }
-        userService.addUser(newUser);
+        userService.addUser(newuser);
         User user = getUserFromSession(session);
         model.addAttribute("user", user);
         return "redirect:/";
     }
-
 
     private User getUserFromSession(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");

@@ -22,7 +22,8 @@
 
   <!-- Custom styles for this template -->
   <link href="../css/clean-blog.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="jodit/build/jodit.min.css">
+    <script src="jodit/build/jodit.min.js"></script>
 </head>
 
 <body>
@@ -87,12 +88,13 @@
                         >
             </div>
                     <div class="form-group">
-                        <label for="testarea2">Content</label>
+                        <label for="editor">Content</label>
                         <textarea
                                 th:field="*{content}"
                                 class="form-control"
-                                id="testarea2"
+                                id="editor"
                                 rows="3"></textarea>
+                        <script>var editor = new Jodit('#editor');</script>
                     </div>
 
                     <div class="form-group">

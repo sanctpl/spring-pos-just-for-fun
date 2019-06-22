@@ -30,7 +30,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         if (user != null) {
 
             builder = org.springframework.security.core.userdetails.User.withUsername(s);
-            builder.disabled(false);
+            builder.disabled(!user.isActivity());
             builder.password(user.getPassword());
             String[] authorities = user.getRoles()
                     .stream().map(Role::getRole).toArray(String[]::new);

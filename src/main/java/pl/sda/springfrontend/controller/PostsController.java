@@ -2,6 +2,7 @@ package pl.sda.springfrontend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,6 @@ public class PostsController {
     public PostsController(PostService postService) {
         this.postService = postService;
     }
-
     @GetMapping("/")
     public String home(Model model, HttpSession httpSession) {
         List<Post> posts = postService.getAll();
@@ -40,9 +40,8 @@ public class PostsController {
 
 
     @GetMapping("/addpost")
-    public String addPost(Model model, HttpSession session) {
+    public String addPost(Model model, HttpSession session, Authentication authentication) {
         model.addAttribute("user", getUserFromSession(session));
-
         List<CategoryEnum> categoryEnum = new ArrayList<>(Arrays.asList(CategoryEnum.values()));
         model.addAttribute("categoryList", categoryEnum);
         model.addAttribute("post", new Post());
@@ -53,6 +52,8 @@ public class PostsController {
     public String addPost(Model model, @PathVariable Long user_id, Post post) {
         Post tmp = postService.addPost(post, user_id);
         return "redirect:/post/" + tmp.getId();
+
+
     }
 
 

@@ -39,20 +39,19 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         try {
             mailingService.sendSimpleMessage(newUser.getEmail(), "Activation Link for: " + newUser.getEmail(),
-                    "<a href='/activate?user=" + newUser.getEmail() + "&token=" + newUser.getActivateToken() + "'>Activate</a>");
+                    "<a href='http://localhost:8080/activate/" + newUser.getActivateToken() + "'>Activate</a>");
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         userRepository.save(newUser);
     }
 
-    public String getActivationTokenForUser(User user) {
+    private String getActivationTokenForUser(User user) {
         String textToTokenize = user.getId() + user.getEmail() + user.getPassword() + user.getRegister_date();
-        String token = encryptThisString(textToTokenize);
-        return token;
+        return encryptThisString(textToTokenize);
     }
 
-    public static String encryptThisString(String input) {
+    private static String encryptThisString(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             byte[] messageDigest = md.digest(input.getBytes());
@@ -64,6 +63,15 @@ public class UserService {
             return hashtext;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void activateUser(String token) {
+        User user = userRepository.getByActivateToken(token);
+        if (user != null) {
+            user.setActivity(true);
+            user.setPassword_confirm(user.getPassword());
+            userRepository.save(user);
         }
     }
 
