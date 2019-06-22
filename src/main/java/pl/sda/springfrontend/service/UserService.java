@@ -39,7 +39,7 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         try {
             mailingService.sendSimpleMessage(newUser.getEmail(), "Activation Link for: " + newUser.getEmail(),
-                    "<a href='http://localhost:8080/activate/" + newUser.getActivateToken() + "'>Activate</a>");
+                    "<a href='https://localhost/activate/" + newUser.getActivateToken() + "'>Activate</a>");
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -74,27 +74,4 @@ public class UserService {
             userRepository.save(user);
         }
     }
-
-/*
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-
-    public User setActive(Long id) {
-        if (userRepository.findById(id).isPresent()) {
-           User user = userRepository.findById(id).get();
-           user.setActivity(true);
-           userRepository.save(user);
-           return user;
-        }
-        return null;
-    }
-
-    public void removeUser(Long id){
-        userRepository.findById(id).ifPresent(user ->
-            userRepository.delete(user));
-    }*/
-
-
 }
