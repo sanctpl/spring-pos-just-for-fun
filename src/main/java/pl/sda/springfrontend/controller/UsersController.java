@@ -71,41 +71,5 @@ public class UsersController {
         return "login";
     }
 
-
-
-/*
-
-    @RequestMapping(value = "/createOrder",
-            method = RequestMethod.POST,
-            headers = {"Content-type=application/json"},
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public FinalOrderDetail createOrder(@RequestBody CreateOrder createOrder) {
-
-        return postCreateOrder_restTemplate(createOrder, oAuthUser).getBody();
-    }
-
-
-    private ResponseEntity<String> postCreateOrder_restTemplate(CreateOrder createOrder, FacebookUser oAuthUser) {
-
-        String url_POST = "your post url goes here";
-
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", String.format("%s %s", oAuthUser.getTokenType(), oAuthUser.getAccessToken()));
-        headers.add("Content-Type", "application/json");
-
-        RestTemplate restTemplate = new RestTemplate();
-        //restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-        HttpEntity<String> request = new HttpEntity<String>(createOrder, headers);
-
-        ResponseEntity<String> result = restTemplate.exchange(url_POST, HttpMethod.POST, request, String.class);
-        System.out.println("#### post response = " + result);
-
-        return result;
-    }
-
-*/
-
 }
 

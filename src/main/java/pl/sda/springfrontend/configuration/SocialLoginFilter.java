@@ -14,6 +14,7 @@ import pl.sda.springfrontend.handlers.CustomAuthSuccessHandler;
 
 import javax.servlet.Filter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -53,8 +54,10 @@ public class SocialLoginFilter {
         List<Filter> filters = new ArrayList<>();
 
         OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
+        facebook.setScope(Arrays.asList(new String[]{"email"}));
         OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook, oauth2ClientContext);
         facebookFilter.setRestTemplate(facebookTemplate);
+
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(facebookResource.getUserInfoUri(), facebook.getClientId());
         tokenServices.setRestTemplate(facebookTemplate);
         facebookFilter.setTokenServices(tokenServices);
@@ -62,6 +65,8 @@ public class SocialLoginFilter {
         filters.add(facebookFilter);
 
         OAuth2ClientAuthenticationProcessingFilter githubFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/github");
+        github.setScope(Arrays.asList(new String[]{"user:email"}));
+
         OAuth2RestTemplate githubTemplate = new OAuth2RestTemplate(github, oauth2ClientContext);
         githubFilter.setRestTemplate(githubTemplate);
         tokenServices = new UserInfoTokenServices(githubResource.getUserInfoUri(), github.getClientId());

@@ -80,12 +80,13 @@ public class FacebookUser implements Serializable {
                     // This is what you will be looking for
 
                     setAccessToken(oAuth2AuthenticationDetails.getTokenValue());
+                    System.out.println(oAuth2AuthenticationDetails.getTokenValue());
                     System.out.println("Token: " + getAccessToken());
-                    /*    try {
+                    try {
                             setEmail(new Profile_Modal().call_me(getAccessToken()));
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }*/
+                    }
                 }
 
                 // This detail is more related to Logged-in User

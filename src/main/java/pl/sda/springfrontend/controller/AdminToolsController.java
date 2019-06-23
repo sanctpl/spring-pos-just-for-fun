@@ -9,6 +9,6 @@ import java.security.Principal;
 public class AdminToolsController {
     @GetMapping("/admin")
     public String adminPage(Principal principal) {
-        return "admin";
+        return "admin/tables";
     }
 }
