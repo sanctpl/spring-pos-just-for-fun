@@ -25,11 +25,11 @@ public class Post {
     private String content;
     @Enumerated
     private CategoryEnum category;
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @JsonIgnore
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Comment> comments = new ArrayList<>();
 
 

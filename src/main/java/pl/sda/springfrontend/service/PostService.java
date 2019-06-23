@@ -1,6 +1,7 @@
 package pl.sda.springfrontend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.sda.springfrontend.model.Comment;
 import pl.sda.springfrontend.model.Post;
@@ -49,7 +50,8 @@ public class PostService {
     }
 
     public List<Post> getAll() {
-        return postRepository.findAll();
+        return postRepository.findAll(Sort.by("id").descending());
+        //  return postRepository.findAll();
     }
 
     public Post getPost(Long id) {

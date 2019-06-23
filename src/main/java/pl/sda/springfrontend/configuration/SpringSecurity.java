@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +16,7 @@ import pl.sda.springfrontend.handlers.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableOAuth2Client
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     private final
@@ -65,9 +64,12 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/addpost").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/**", "/webjars/**", "/error**").permitAll()
-                .and().formLogin().loginPage("/log").loginProcessingUrl("/log").successHandler(customAuthSuccessHandler).passwordParameter("pass")
+                .and().formLogin().loginPage("/login").loginProcessingUrl("/login").successHandler(customAuthSuccessHandler).passwordParameter("pass").successForwardUrl("/")
                 .and().logout().logoutSuccessHandler(customLogoutSuccessHandler).permitAll()
-                .and().csrf().disable().addFilterAt(socialLoginFilter.authFilter(), BasicAuthenticationFilter.class);
+                .and().csrf().disable()
+                .addFilterAt(socialLoginFilter.authFilter(), BasicAuthenticationFilter.class);
+
+
 
     }
 }

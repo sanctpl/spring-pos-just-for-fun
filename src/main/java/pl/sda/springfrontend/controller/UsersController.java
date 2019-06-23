@@ -1,6 +1,7 @@
 package pl.sda.springfrontend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import pl.sda.springfrontend.service.UserService;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class UsersController {
@@ -57,7 +59,53 @@ public class UsersController {
     }
 
     @GetMapping("/log")
-    public String loginMapping() {
+    public String loginMapping(Authentication authentication, Principal principal) {
+        if (authentication != null) { //|| principal!=null) {
+            System.out.println();
+            authentication.getAuthorities().stream().forEach(System.out::println);
+            System.out.println();
+            return "redirect:/";
+
+        }
+
         return "login";
     }
+
+
+
+/*
+
+    @RequestMapping(value = "/createOrder",
+            method = RequestMethod.POST,
+            headers = {"Content-type=application/json"},
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public FinalOrderDetail createOrder(@RequestBody CreateOrder createOrder) {
+
+        return postCreateOrder_restTemplate(createOrder, oAuthUser).getBody();
+    }
+
+
+    private ResponseEntity<String> postCreateOrder_restTemplate(CreateOrder createOrder, FacebookUser oAuthUser) {
+
+        String url_POST = "your post url goes here";
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", String.format("%s %s", oAuthUser.getTokenType(), oAuthUser.getAccessToken()));
+        headers.add("Content-Type", "application/json");
+
+        RestTemplate restTemplate = new RestTemplate();
+        //restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        HttpEntity<String> request = new HttpEntity<String>(createOrder, headers);
+
+        ResponseEntity<String> result = restTemplate.exchange(url_POST, HttpMethod.POST, request, String.class);
+        System.out.println("#### post response = " + result);
+
+        return result;
+    }
+
+*/
+
 }
+

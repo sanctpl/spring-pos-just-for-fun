@@ -28,9 +28,17 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException, ServletException {
+
         HttpSession session = httpServletRequest.getSession();
         User user = repository.findByEmail(authentication.getName());
         session.setAttribute("user", user);
+        System.out.println();
+        System.out.println();
+        System.out.println(authentication.getName());
+        System.out.println(
+        );
+        System.out.println();
         httpServletResponse.sendRedirect("/");
+
     }
 }

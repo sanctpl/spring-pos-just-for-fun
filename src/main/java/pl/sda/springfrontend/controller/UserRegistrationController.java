@@ -1,10 +1,13 @@
 package pl.sda.springfrontend.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.sda.springfrontend.helpers.MailingService;
 import pl.sda.springfrontend.service.UserService;
+
+import java.security.Principal;
 
 @Controller
 public class UserRegistrationController {
@@ -23,8 +26,14 @@ public class UserRegistrationController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
-    public String login() {
+    @GetMapping("/login*")
+    public String loginMapping(Authentication authentication, Principal principal) {
+        if (authentication != null) { //|| principal!=null) {
+            //   authentication.getAuthorities().stream().forEach(System.out::println);
+            //   System.out.println(authentication.getCredentials());
+            return "redirect:/";
+        }
+
         return "login";
     }
 }

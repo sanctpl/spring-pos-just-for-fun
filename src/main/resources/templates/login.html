@@ -28,9 +28,7 @@
     <!--===============================================================================================-->
 </head>
 <body>
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous"
-        src="https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v3.3&appId=635973853548650&autoLogAppEvents=1"></script>
+
 
 <div class="limiter">
     <div class="container-login100">
@@ -41,7 +39,7 @@
 					</span>
             </div>
 
-            <form class="login100-form validate-form" action="log" method='POST'>
+            <form class="login100-form validate-form" action="login" method='POST'>
                 <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
                     <span class="label-input100">Username</span>
                     <input class="input100" type="text" name="username" placeholder="Enter username">
@@ -55,11 +53,11 @@
                 </div>
 
                 <div class="flex-sb-m w-full p-b-30">
-                    <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with"
-                         data-auto-logout-link="false" data-use-continue-as="false"><a href="/login/facebook">Zaloguj za
-                        pomocą Facebook</a></div>
+
+                    <a href="/login/facebook">Zaloguj za pomocą Facebook</a>
                     <a href="/login/github">Zaloguj za pomocą Githib</a>
                 </div>
+
 
                 <div class="container-login100-form-btn">
                     <button class="login100-form-btn" value="submit">

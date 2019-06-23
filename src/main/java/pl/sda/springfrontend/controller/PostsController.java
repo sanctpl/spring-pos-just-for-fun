@@ -2,7 +2,9 @@ package pl.sda.springfrontend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,22 +15,23 @@ import pl.sda.springfrontend.model.User;
 import pl.sda.springfrontend.service.PostService;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class PostsController {
 
     private PostService postService;
+    @Autowired
+    @Qualifier("oauth2ClientContext")
+    OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
     public PostsController(PostService postService) {
         this.postService = postService;
     }
     @GetMapping("/")
-    public String home(Model model, HttpSession httpSession) {
+    public String home(Model model, HttpSession httpSession, Authentication authentication) {
         List<Post> posts = postService.getAll();
         User user = getUserFromSession(httpSession);
         System.out.println(user);
@@ -63,6 +66,10 @@ public class PostsController {
 
         Post post = postService.getPost(id);
         List<Comment> comments = postService.getAllComentsForPost(id);
+        post.setComments(post.getComments().stream()
+                .sorted(Comparator.comparing(Comment::getId).reversed())
+                .collect(Collectors.toList())
+        );
         model.addAttribute("post", post);
         model.addAttribute("comment", new Comment());
         return "post";
